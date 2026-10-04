@@ -85,13 +85,13 @@ def compute_gradient(p1, p2_batch, h=1e-4):
 
 #saving an array of training data in folder
 def save_p2_players(n_samples, battle_fields = battlefields):
-    probabilities = stats.norm.pdf(battle_fields, loc=9, scale=1.25)
+    probabilities = stats.norm.pdf(battle_fields, loc=6, scale=1.25)
     probabilities /= np.sum(probabilities)
 
     save_array = np.zeros((n_samples, len(battle_fields)))
 
     for i in tqdm(range(n_samples)):
-        p2_choices = rng.choice(battlefields, size = 100, replace= True)#, p = p2_prob_density)#, p = p2_prob_density)       #easily add in probability distribution for guessing strategies with p argument.
+        p2_choices = rng.choice(battlefields, size = 100, replace= True, p = probabilities)#, p = p2_prob_density)#, p = p2_prob_density)       #easily add in probability distribution for guessing strategies with p argument.
         p2_soldiers = np.bincount(p2_choices, minlength=11)[1:]
 
         save_array[i] = p2_soldiers
@@ -112,9 +112,10 @@ def error_gradient(p1_score, p2_score):
     mse = np.mean((target - p1_score))
     return -2*mse
 
-def optimize_strategy(epochs=1000, batch_size=50, lr=0.5):
+def optimize_strategy(epochs=500, batch_size=50, lr=0.001):
     # Initialize P1 with an even distribution of 10 soldiers per battlefield
-    p1 = np.ones(10, dtype=float) * 10.0
+    p1_ones = np.ones(10, dtype=float) * 10.0
+    p1 = [4,6,8,11,14,0,18,21,0,18] #previously trained model.
     
     # Generate training dataset of opponents
     p2_data = save_p2_players(1000)
@@ -128,7 +129,7 @@ def optimize_strategy(epochs=1000, batch_size=50, lr=0.5):
         # Compute gradient wrt score advantage
         grad = compute_gradient(p1, p2_batch)
         
-        # Gradient Ascent step
+        # Gradient descent step
         p1 += lr * grad
         
         # Enforce non-negativity and 100 soldier sum

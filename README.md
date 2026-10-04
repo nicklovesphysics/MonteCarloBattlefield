@@ -10,4 +10,4 @@ save_p2_players saves an array of players for player 2. the weights are controll
 The rest is just win/loss calculation, optimization, etc. 
 
 
-I've found my most successful solution has been trained with uniformly distributed data. the only model it's lost to has been one with a normal distribution of soldiers around 9. This model loses to every other model type, though. so, i'm further training the model just a bit to attempt to beat this normal distribution around 9 a tad bit more. 
+I've found my most successful solution has been trained with uniformly distributed data. the only model it's lost to has been one with a normal distribution of soldiers around 5. This model loses to every other model type, though. so, i'm further training the model just a bit to attempt to beat this normal distribution around 5-6 a tad bit more. 

@@ -7,8 +7,9 @@ from tqdm import tqdm
 #print("Total Soldiers Allocated:", np.sum(optimal_p1))
 
 #50ke
-p1_guess = [4,6,8,11,14,0,18,21,0,18]       #goign with this for now. 
+p1_guess = [4,6,8,11,14,0,18,21,0,18]       #going with this for now. Training into p1_final, which is going to be trained with normal data (centered around 5)
 p1_uniform = [0,1,2,11,12,16,14,15,15,14]
+optimal_p1 = [ 4,  6,  8, 11, 14,  0, 18, 20,  2, 17]
 
 #1000e
 
@@ -25,8 +26,9 @@ wins = []
 
 #for i in range(len(p2[0])):
 
-#    wins.append(mc.win_score_calc(p1_uniform, p2[i]))
+    #wins.append(mc.win_score_calc(optimal_p1, p2[i]))
 
-wins.append(mc.win_score_calc(np.array(p1_guess), np.array(p1_uniform)))
+wins.append(mc.win_score_calc(np.array(optimal_p1), np.array(normal)))
+print(optimal_p1)
 
 print(np.mean(wins))

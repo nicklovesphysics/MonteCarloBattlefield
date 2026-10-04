@@ -50,7 +50,7 @@ def score_calc(p1, p2, k=0.5):
     p1_raw = np.sum(battlefields * w1)
     p2_raw = np.sum(battlefields * w2)
 
-    # multiple of 5 check
+    # multiple of 5 smooth approximation
     p1_mult *= (1.0 + 0.4 * 0.5 * (1.0 + np.cos(2 * np.pi * p1_raw / 5.0)))
     p2_mult *= (1.0 + 0.4 * 0.5 * (1.0 + np.cos(2 * np.pi * p2_raw / 5.0)))
 
@@ -98,6 +98,7 @@ def save_p2_players(n_samples, battle_fields = battlefields):
     return save_array
 
 def project_onto_budget(p1, total_budget=100.0):
+    #just scales sum to 100 players. 
     p1 = np.maximum(p1, 0.0)
     current_sum = np.sum(p1)
     if current_sum == 0:
@@ -118,7 +119,7 @@ def optimize_strategy(epochs=1000, batch_size=50, lr=0.5):
     # Generate training dataset of opponents
     p2_data = save_p2_players(1000)
     
-    print("Training strategy via Gradient Ascent...")
+    print("Training...")
     for epoch in tqdm(range(epochs)):
         # Sample a random batch of opponents
         batch_indices = np.random.choice(len(p2_data), size=batch_size, replace=False)
@@ -133,7 +134,6 @@ def optimize_strategy(epochs=1000, batch_size=50, lr=0.5):
         # Enforce non-negativity and 100 soldier sum
         p1 = project_onto_budget(p1, total_budget=100.0)
 
-    # Post-process into discrete integer allocations summing to 100
     p1_int = np.round(p1).astype(int)
     diff = 100 - np.sum(p1_int)
     p1_int[np.argmax(p1)] += diff
